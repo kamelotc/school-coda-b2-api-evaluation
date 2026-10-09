@@ -84,13 +84,26 @@ Une section par test en échec : renseignez ses quatre champs.
 
 ## testRefreshingTwiceWithTheSameTokenIsUnauthorized
 
-**Symptôme** :
+**Symptôme** : Un utilisateur à réutiliser son jeton de renouvellement une deuxième fois donc il à été refuser, 
+on'a reçu un statut 200 alors que l'on devrait avoir un statut 401 , donc il faut modifier les codes d'erreurs pour bien vérifier que le refresh token n'est utilisable qu'une seul fois.
 
-**Cause** :
+
+**Cause** : l'entity RefreshToken.php , il manque une règle pour dire d'envoyer une erreur 401 quand l'utilisateur réutillise son jeton de renouvellement
 
 **Règle du module en jeu** :
 
 **Correctif** :
+
+    class RefreshToken extends BaseRefreshToken
+    {
+    #[ORM\Id]
+    #[ORM\Column(type: 'string')]
+    private ?string $refresh_token = null;
+
+    public function getRefreshToken(): ?string{
+        return $this->refresh_token;
+    }
+
 
 ## testRemovingALineFromSomeoneElsesOrderIsForbidden
 
