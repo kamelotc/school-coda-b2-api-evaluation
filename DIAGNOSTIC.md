@@ -54,19 +54,27 @@ Une section par test en échec : renseignez ses quatre champs.
 
 ## testListingKitchenTicketsWithoutTokenIsUnauthorized
 
-**Symptôme** :
+**Symptôme** : Une erreur 401 est attendu , nous avons reçu une 200 donc tout le monde peux accèder à la mise en vente de ticket même ceux qui n'on pas de jeton
 
 **Cause** :
 
-**Règle du module en jeu** :
+**Règle du module en jeu** : Pour régler le problème il faut allez dans le KitchenTicket.php et rajouter dans le new GetCollection un sécuriter pour que ce soit que les personne ayant des jetons qui y accède.
 
 **Correctif** :
 
+    new GetCollection(
+    uriTemplate: '/kitchen-tickets',
+    paginationClientEnabled: false,
+    output: KitchenTicketListOutput::class,
+    provider: KitchenTicketCollectionProvider::class,
+    security: "is_granted('ROLE_USER')", /* <--- cette ligne a été rajouter */
+
+
 ## testOpeningAnOrderIgnoresAnAbandonedOne
 
-**Symptôme** :
+**Symptôme** : problème au niveau du panier de la commande, pour l'utilisateur bob. 
 
-**Cause** :
+**Cause** : corriger le OrderRepository.php et mettre une conditon , si l'utilisateur quitte son panier avec des commandes dedans, garder en cache la commande et un fois qu'il revient sur le site il aura ça commande qui sera toujours présente.
 
 **Règle du module en jeu** :
 
